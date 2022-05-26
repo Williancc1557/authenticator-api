@@ -1,6 +1,5 @@
 import { DataSource } from "typeorm";
-import { CheckEmail } from "../entities/check-email.entity";
-import { User } from "../entities/user.entity";
+import { User, Email } from "../entities/user.entity";
 import { config } from "dotenv";
 config();
 
@@ -11,7 +10,7 @@ export const postgresDataSource = new DataSource({
     port: 5432,
     synchronize: true,
     logging: false,
-    entities: [User, CheckEmail],
+    entities: [User, Email],
 });
 
 postgresDataSource.initialize().then(async () => {
