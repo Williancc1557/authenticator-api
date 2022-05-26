@@ -1,6 +1,7 @@
 import { DataSource } from "typeorm";
 import { User, Email } from "../entities/user.entity";
 import { config } from "dotenv";
+import { log } from "src/utils/logger/log";
 config();
 
 export const postgresDataSource = new DataSource({
@@ -14,7 +15,7 @@ export const postgresDataSource = new DataSource({
 });
 
 postgresDataSource.initialize().then(async () => {
-    console.log("The DataSource has been conected!");
+    log.info("Data source has been started");
 }).catch((err) => {
-    console.log(`Error in the connection DataSource: ${err}`);
+    log.error(`Error DataSource's connection: ${err}`);
 });

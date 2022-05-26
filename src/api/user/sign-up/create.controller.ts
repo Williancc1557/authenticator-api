@@ -20,9 +20,10 @@ export class CreateController {
         }
 
         log.info(`valid password: ${body.password}`);
-        await this.createUserService.create(body);
-        log.info(`user created: ${body.password}`);
 
+        await this.createUserService.create(body);
+
+        log.info(`user created: ${body.password}`);
 
         const token = new CreateJtw(body.email).create();
 
