@@ -29,11 +29,11 @@ export class SendMail {
         private readonly to: string
     ) { }
 
-    public async sendKeyForCheckEmail(key: number) {
+    public async sendconfirmationTokenForCheckEmail(confirmationToken: number) {
         return transporter.sendMail({
             to: this.to,
-            subject: `Your code for check email is ${key}`,
-            text: `Use the code ${key} for check your email`,
+            subject: `Your code for check email is ${confirmationToken}`,
+            text: `Use the code ${confirmationToken} for check your email`,
         });
     }
 }

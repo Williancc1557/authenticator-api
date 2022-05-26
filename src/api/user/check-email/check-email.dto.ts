@@ -7,5 +7,5 @@ export class CheckEmailDto {
 
     @IsNumber()
     @IsDefined()
-    public key: number;
+    public confirmationToken: number;
 }

@@ -1,28 +1,16 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-@Entity({ name: "email" })
-export class Email {
-    @PrimaryGeneratedColumn()
-    public id: number;
-
-    @Column({ unique: true })
-    public email: string;
-
-    @Column({ default: false })
-    public isValid: boolean;
-
-    @Column()
-    public key: number;
-}
+import { Contact } from "./contact.entity";
 
 @Entity({ name: "user" })
-export class User {
+export class UserEntity {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @OneToOne(() => Email, { cascade: true })
+    @OneToOne(() => Contact, (contact) => contact.user, { cascade: true })
     @JoinColumn()
-    public email: Email;
+    public contact: Contact;
 
     @Column()
     public password: string;
 }
+

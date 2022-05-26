@@ -10,10 +10,10 @@ export class CheckEmailController {
 
     @Patch()
     @HttpCode(HttpStatus.ACCEPTED)
-    public async create(@Body() { email, key }: CheckEmailDto) {
+    public async create(@Body() { email, confirmationToken }: CheckEmailDto) {
         await this.checkEmailService.check({
             email,
-            key,
+            confirmationToken,
         });
 
         return {

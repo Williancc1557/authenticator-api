@@ -1,10 +1,10 @@
 import { CreateUserService } from "./create.service";
 
 describe("CreateUserService", () => {
-  test("Test generatedKey function", () => {
-    const key = new CreateUserService().generateKey();
+  test("Test generatedconfirmationToken function", () => {
+    const confirmationToken = new CreateUserService().generateconfirmationToken();
 
-    expect(String(key).length).toBe(4);
-    expect(typeof key).toBe("number");
+    expect(String(confirmationToken).length).toBe(4);
+    expect(typeof confirmationToken).toBe("number");
   });
 });
