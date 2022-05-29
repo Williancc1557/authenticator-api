@@ -1,7 +1,6 @@
 import { Contact } from "./../../../entities/contact.entity";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { postgresDataSource } from "src/database/data-souce";
-import { VerifyEmailEntity } from "src/database/entities/verify-email.entity";
 
 interface CheckParams {
     email: string;
@@ -12,9 +11,9 @@ interface CheckParams {
 export class CheckValidEmailService {
     public async check({ email, confirmationToken }: CheckParams) {
         const contactRepository = postgresDataSource.getRepository(Contact);
-        const verifyEmailRepository = postgresDataSource.getRepository(VerifyEmailEntity);
 
         const contact = await contactRepository.findOne({
+            relations: ["verifyEmail"],
             where: {
                 email,
             },
@@ -24,23 +23,18 @@ export class CheckValidEmailService {
             throw new HttpException("Email is not valid", HttpStatus.FORBIDDEN);
         }
 
-        const userVerifyEmail = await verifyEmailRepository.findOne({
-            where: {
-                id: contact.id,
-            },
-        });
 
-        if (userVerifyEmail.isVerified) {
+        if (contact.verifyEmail.isVerified) {
             throw new HttpException("this email has already been verified ", HttpStatus.FORBIDDEN);
         }
 
-        if (confirmationToken != userVerifyEmail.confirmationToken) {
+        if (confirmationToken != contact.verifyEmail.confirmationToken) {
             throw new HttpException("confirmationToken is not valid", HttpStatus.FORBIDDEN);
         }
 
-        userVerifyEmail.isVerified = true;
+        contact.verifyEmail.isVerified = true;
 
 
-        await verifyEmailRepository.save(userVerifyEmail);
+        await contactRepository.save(contact);
     }
 }
