@@ -1,7 +1,6 @@
 import { CreateJtw } from "../../../utils/jwt/index";
-import { isPassword } from "src/validations/is-password";
 import { CreateUserService } from "src/database/repositories/user/create/create.service";
-import { Body, Controller, HttpException, HttpStatus, Post } from "@nestjs/common";
+import { Body, Controller, HttpStatus, Post } from "@nestjs/common";
 import { CreateUserDto } from "./create-user.dto";
 import { log } from "src/utils/logger/log";
 
@@ -14,12 +13,6 @@ export class CreateController {
     @Post()
     public async createUser(@Body() body: CreateUserDto) {
         log.info(`${JSON.stringify(body)} << body`);
-
-        if (!isPassword(body.password)) {
-            throw new HttpException("Invalid password", HttpStatus.FORBIDDEN);
-        }
-
-        log.info("valid password");
 
         await this.createUserService.create(body);
 
