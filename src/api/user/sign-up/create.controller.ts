@@ -19,11 +19,11 @@ export class CreateController {
             throw new HttpException("Invalid password", HttpStatus.FORBIDDEN);
         }
 
-        log.info(`valid password: ${body.password}`);
+        log.info("valid password");
 
         await this.createUserService.create(body);
 
-        log.info(`user created: ${body.password}`);
+        log.info("user created");
 
         const token = new CreateJtw(body.email).create();
 

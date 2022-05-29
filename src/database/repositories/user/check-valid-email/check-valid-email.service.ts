@@ -3,7 +3,6 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { postgresDataSource } from "src/database/data-souce";
 import { VerifyEmailEntity } from "src/database/entities/verify-email.entity";
 
-
 interface CheckParams {
     email: string;
     confirmationToken: number;
