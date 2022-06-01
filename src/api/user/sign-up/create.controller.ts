@@ -4,7 +4,7 @@ import { Body, Controller, HttpStatus, Post } from "@nestjs/common";
 import { CreateUserDto } from "./create-user.dto";
 import { log } from "src/utils/logger/log";
 
-@Controller("create")
+@Controller("sign-up")
 export class CreateController {
     public constructor(
         public createUserService: CreateUserService
