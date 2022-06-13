@@ -1,11 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { postgresDataSource } from "src/database/data-souce";
 import { Contact } from "src/database/entities/contact.entity";
-import { UserEntity } from "src/database/entities/user.entity";
+import { VerifyEmailEntity } from "src/database/entities/verify-email.entity";
 
 @Injectable()
-export class GetUserService {
-    public async get(email: string): Promise<UserEntity> {
+export class IsVerifiedService {
+    public async isVerified(email: string): Promise<boolean> {
         const contactRepository = postgresDataSource.getRepository(Contact);
 
         const findContactByEmail = await contactRepository.findOne({
@@ -14,19 +14,18 @@ export class GetUserService {
             },
         });
 
-        const userRepository = postgresDataSource.getRepository(UserEntity);
+        const verifyEmailRepository = postgresDataSource.getRepository(VerifyEmailEntity);
 
-        const findUserById = await userRepository.findOne({
-            relations: ["contact"],
+        const findVerifyEmailById = await verifyEmailRepository.findOne({
             where: {
                 id: findContactByEmail.id,
             },
         });
 
-        if (!findUserById) {
+        if (!findVerifyEmailById) {
             throw new HttpException("User dont exists", HttpStatus.FORBIDDEN);
         }
 
-        return findUserById;
+        return findVerifyEmailById.isVerified;
     }
 }

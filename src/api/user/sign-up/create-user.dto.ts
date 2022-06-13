@@ -8,6 +8,6 @@ export class CreateUserDto {
     @IsString()
     @IsDefined()
     @MinLength(6) // eslint-disable-line
-    @MaxLength(25) // eslint-disable-line
+    @MaxLength(30) // eslint-disable-line
     public readonly password: string;
 }

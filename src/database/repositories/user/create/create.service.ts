@@ -25,11 +25,14 @@ export class CreateUserService {
     public async create(user: CreateUserDto): Promise<void> {
         const emailRepository = postgresDataSource.getRepository(Contact);
 
+        log.info("Create function started");
+
         if (await emailRepository.findOne({
             where: {
                 email: user.email,
             },
         })) {
+            log.error("User already exists");
             throw new HttpException("User already exists", HttpStatus.CONFLICT);
         }
 
@@ -38,6 +41,7 @@ export class CreateUserService {
         const userRepository = postgresDataSource.getRepository(UserEntity);
 
         log.info("saving the user . . .");
+
         await userRepository.save({
             password: user.password,
             contact: {
@@ -48,7 +52,15 @@ export class CreateUserService {
             },
         });
 
-        await new SendMail(user.email).sendconfirmationTokenForCheckEmail(confirmationToken);
+        log.info("User saved");
+
+        try {
+            await new SendMail(user.email).sendconfirmationTokenForCheckEmail(confirmationToken);
+        } catch (err) {
+            log.fatal(err);
+            throw new HttpException("Error for send the key", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         log.info(`Email sended to ${user.email}`);
     }
 }

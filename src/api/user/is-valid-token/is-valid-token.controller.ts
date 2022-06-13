@@ -1,8 +1,5 @@
-import { Body, Controller, Get, HttpStatus } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Param } from "@nestjs/common";
 import { CheckJwtService } from "src/utils/check-jwt/check-jwt.service";
-import { IsValidTokenDto } from "./is-valid-token.dto";
-
-
 @Controller("is-valid-token")
 export class IsValidTokenController {
 
@@ -10,8 +7,8 @@ export class IsValidTokenController {
         private readonly checkTokenService: CheckJwtService
     ) { }
 
-    @Get()
-    public async isValidToken(@Body() { jwt }: IsValidTokenDto) {
+    @Get(":token")
+    public async isValidToken(@Param("token") jwt: string) {
         const body = this.checkTokenService.check(jwt);
 
         return {

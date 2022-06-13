@@ -2,27 +2,14 @@ import * as nodemailer from "nodemailer";
 import { config } from "dotenv";
 config();
 
-interface Transporter {
-    host: string;
-    port: number;
-    secure: boolean;
-    auth: {
-        user: string;
-        pass: string;
-    };
-}
-
-const transporterConfig: Transporter = {
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
+const transporter = nodemailer.createTransport({
+    host: "smtp.umbler.com",
+    port: 587,
     auth: {
         user: process.env.USER_EMAIL,
         pass: process.env.USER_EMAIL_PASSWORD,
     },
-};
-
-const transporter = nodemailer.createTransport(transporterConfig);
+});
 
 export class SendMail {
     public constructor(

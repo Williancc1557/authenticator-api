@@ -4,13 +4,16 @@ import { CheckEmailModule } from "./api/user/check-email/check-email.module";
 import { GetModule } from "./api/user/get/get.module";
 import { IsValidTokenModule } from "./api/user/is-valid-token/is-valid-token.module";
 import { SignInModule } from "./api/user/sign-in/sign-in.module";
+import { IsVerifiedModule } from "./api/user/is-verified/is-verified.module";
+
 @Module({
   imports: [
     CreateModule,
     CheckEmailModule,
     GetModule,
     IsValidTokenModule,
-    SignInModule],
+    SignInModule,
+    IsVerifiedModule],
   controllers: [],
   providers: [],
 })

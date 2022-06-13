@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus } from "@nestjs/common";
+import { Body, Controller, Post, HttpStatus } from "@nestjs/common";
 import { SignInService } from "src/database/repositories/user/sign-in/sign-in.service";
 import { SignInDto } from "./sign-in.dto";
 
@@ -8,7 +8,7 @@ export class SignInController {
         private readonly signInService: SignInService
     ) { }
 
-    @Get()
+    @Post()
     public async signIn(@Body() body: SignInDto) {
         const resp = await this.signInService.signIn(body);
 

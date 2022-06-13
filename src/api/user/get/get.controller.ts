@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpStatus } from "@nestjs/common";
+import { Controller, Get, HttpStatus, Param } from "@nestjs/common";
 import { GetUserService } from "src/database/repositories/user/get/get.service";
-import { GetUserDto } from "./get.dto";
+
 
 @Controller("get")
 export class GetUserController {
@@ -8,11 +8,20 @@ export class GetUserController {
         private readonly getUserService: GetUserService
     ) { }
 
-    @Get("user")
-    public async getUser(@Body() { email }: GetUserDto) {
-        return {
-            statusCode: HttpStatus.OK,
-            body: await this.getUserService.get(email),
-        };
+    @Get("user/:email")
+    public async getUser(@Param("email") email: string) {
+        try {
+            const req = await this.getUserService.get(email);
+
+            return {
+                statusCode: HttpStatus.OK,
+                body: req,
+            };
+        } catch (err) {
+            return {
+                statusCode: HttpStatus.FORBIDDEN,
+                body: [],
+            };
+        }
     }
 }
