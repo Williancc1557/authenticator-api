@@ -22,7 +22,7 @@ export class SignInService {
         }
 
         const user = await userRepository.findOne({
-            relations: ["contact", "contact.verifyEmail"],
+            relations: ["contact"],
             where: {
                 id: findContactByEmail.id,
             },
