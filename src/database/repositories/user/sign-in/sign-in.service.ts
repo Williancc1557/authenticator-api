@@ -4,6 +4,8 @@ import { postgresDataSource } from "src/database/data-souce";
 import { Contact } from "src/database/entities/contact.entity";
 import { UserEntity } from "src/database/entities/user.entity";
 import { CreateJtw } from "src/utils/jwt";
+import * as bcrypt from "bcrypt";
+
 
 @Injectable()
 export class SignInService {
@@ -28,7 +30,9 @@ export class SignInService {
             },
         });
 
-        if (body.password != user.password) {
+        const comparePassword = await bcrypt.compare(body.password, user.password);
+
+        if (!comparePassword) {
             throw new HttpException("invalid password", HttpStatus.FORBIDDEN);
         }
 

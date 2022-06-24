@@ -14,6 +14,10 @@ export class IsVerifiedService {
             },
         });
 
+        if (!findContactByEmail) {
+            throw new HttpException("Email is not valid", HttpStatus.FORBIDDEN);
+        }
+
         const verifyEmailRepository = postgresDataSource.getRepository(VerifyEmailEntity);
 
         const findVerifyEmailById = await verifyEmailRepository.findOne({

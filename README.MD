@@ -20,6 +20,7 @@ Essa API eu criei com o objetivo de ser consumida em aplicações frontend que n
   framework: "nestjs",
   ORM: "typeorm",
   database: "postgreSQL",
+  utils: ["nodemailer", "bcrypt", "json-web-token", "pino"]
 }
 ```
 
@@ -58,13 +59,17 @@ Após explicado como será organizado suas variáveis de ambiente, vamos para as
 - `is-valid-token`: [Clique aqui para localizar](https://github.com/Williancc1557/authenticator-api/tree/master/src/api/user/is-verified). Essa rota serve para verificar se o token jwt do usuário ainda é válido.
 
 
+
+
+
+
 ### Entradas e saidas das rotas
 
 #### Rota `sign-in`
 
 `localhost:3000/sign-in`
 
-*Exemplo de entrada (BODY):*
+**Exemplo de entrada (BODY):**
 
 ```json
 {
@@ -73,21 +78,21 @@ Após explicado como será organizado suas variáveis de ambiente, vamos para as
 }
 ```
 
-*Exemplo de saida positiva*
+**Exemplo de saida que teve sucesso**
 
 ```json
 {
   "statusCode": 200,
   "body": {
     "jwt": {
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlLndpbGxpYW5AZ21haWwuY29tIiwiaWF0IjoxNjU1OTk2MzE4LCJleHAiOjE2NTYwMzIzMTh9.1cSvczi9rU5xKz1HC0mde1V6qYmgFzkZ3X-Nzl8YL4s",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlLndpbGxpYW5AZ21haWwuY29tIiwiaWF0IjoxNjU2MDg2Njk5LCJleHAiOjE2NTYxMjI2OTl9.K_HYtfRjlhkTCz2y9L7qksLB8hpOq_n6KCACikFltnk",
       "expiresIn": "10h"
     },
     "user": {
-      "id": 72,
-      "password": "Teste123",
+      "id": 74,
+      "password": "$2b$10$AbD3VD5rCxKvekuNkImIgeSkT1bDSeMu7B4VFbIg3TlgUNL.CCkAe",
       "contact": {
-        "id": 72,
+        "id": 74,
         "email": "teste.willian@gmail.com"
       }
     }
@@ -144,5 +149,160 @@ Após explicado como será organizado suas variáveis de ambiente, vamos para as
 ```
 
 
+#### Rota `sign-up`
 
-###### Documentação em produção . . .
+`localhost:3000/sign-up`
+
+**Exemplo de entrada (BODY):**
+
+```json
+{
+  "email": "teste.willian@gmail.com",
+  "password": "Teste123"
+}
+```
+
+**Exemplo de saida que teve sucesso**
+
+```json
+{
+  "statusCode": 201,
+  "body": {
+    "jwt": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RlLndpbGxpYW5AZ21haWwuY29tIiwiaWF0IjoxNjU2MDgzMjI4LCJleHAiOjE2NTYxMTkyMjh9.W2UYuopAkr5xzWWdBFZcBLuL7-heBJbHfYcCFdkpYms",
+      "expiresIn": "10h"
+    }
+  }
+}
+```
+
+**Exemplos de saidas com erro**
+
+*Usuário já existe*
+
+```json
+{
+  "statusCode": 409,
+  "message": "User already exists"
+}
+```
+
+E as mesmas validações de erros que a rota `sign-in` acima, ou seja, o mesmo retorno de erro.
+
+
+
+#### Rota `get`
+
+`localhost:3000/get/user/:email`
+
+**Exemplo de entrada (PARAM):**
+
+`http://localhost:3000/get/user/teste.willian@gmail.com`
+
+**Exemplo de saida que teve sucesso**
+
+```json
+{
+  "statusCode": 200,
+  "body": {
+    "id": 74,
+    "password": "$2b$10$AbD3VD5rCxKvekuNkImIgeSkT1bDSeMu7B4VFbIg3TlgUNL.CCkAe",
+    "contact": {
+      "id": 74,
+      "email": "teste.willian@gmail.com"
+    }
+  }
+}
+```
+
+<p style="font-size: 0.9rem">
+Obs: Essa aqui não possui saida com erro
+</p>
+
+
+
+
+
+
+#### Rota `check-email`
+
+`localhost:3000/check-email`
+
+**Exemplo de entrada (BODY):**
+
+
+```json
+{
+    "email": "teste.willian@gmail.com",
+    "confirmationToken": 5968
+}
+```
+
+**Exemplo de saida que teve sucesso**
+
+```json
+{
+  "statusCode": 202,
+  "body": []
+}
+```
+
+**Exemplos de saidas com erro**
+
+*Chave inválida*
+
+```json
+{
+  "statusCode": 403,
+  "message": "confirmationToken is not valid"
+}
+```
+
+*Email inválido*
+
+```json
+{
+  "statusCode": 403,
+  "message": "Email is not valid"
+}
+```
+
+
+
+
+
+#### Rota `is-verified`
+
+`http://localhost:3000/is-verified/:email`
+
+**Exemplo de entrada (PARAM):**
+
+`http://localhost:3000/is-verified/teste.willian@gmail.com`
+
+**Exemplo de saida que teve sucesso**
+
+```json
+{
+  "statusCode": 200,
+  "body": true
+}
+```
+ou
+
+```json
+{
+  "statusCode": 200,
+  "body": false
+}
+```
+
+**Exemplos de saidas com erro**
+
+*User don't exists*
+
+```json
+{
+  "statusCode": 403,
+  "message": "Email is not valid"
+}
+```

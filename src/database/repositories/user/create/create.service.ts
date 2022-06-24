@@ -5,6 +5,7 @@ import { UserEntity } from "src/database/entities/user.entity";
 import { postgresDataSource } from "src/database/data-souce";
 import { SendMail } from "src/utils/send-mail";
 import { log } from "src/utils/logger/log";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class CreateUserService {
@@ -42,8 +43,12 @@ export class CreateUserService {
 
         log.info("saving the user . . .");
 
+        const hashSalts = 10;
+
+        const hashedPassword = await bcrypt.hash(user.password, hashSalts);
+
         await userRepository.save({
-            password: user.password,
+            password: hashedPassword,
             contact: {
                 email: user.email,
                 verifyEmail: {
